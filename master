@@ -1,1 +1,45 @@
 //Importo desde google colab un programa
+
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+
+fashion_mnist=keras.datasets.fashion_mnist
+(train_images,train_labels), (test_images,test_labels)=fashion_mnist.load_data()
+train_images.shape
+train_labels[0:10]
+class_names=["T-shirt/Top","Trouser","Pullover","Dress", "Coat","Sandal", "Skirt","Sneaker","Bag", "Ankle boot"]
+
+"""Cargamos los datos de fashion_mnist que contiene 70000 imagenes de ropa y se incluye dentro de la librería keras. 
+Separamos la muestra en 60000 imagenes para entrenar y 10000 para que haga las posteriores pruebas. 
+Y categorizamos los 10 tipos de etiquetas de ropa que se pueden visualizar.
+En el siguiente apartado hacemos una prueba para ver como se ven las prendas seleccionadas. En este caso la 100."""
+
+plt.figure()
+plt.imshow(train_images[100])
+plt.colorbar()
+plt.show()
+
+train_images=train_images/255
+test_images=test_images/255
+
+model=keras.Sequential([keras.layers.Flatten(input_shape=(28,28)), keras.layers.Dense(128,activation="relu"), keras.layers.Dense(10, activation="softmax")])
+model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+model.fit (train_images, train_labels, epochs=10)
+
+test_lost, test_acc= model.evaluate(test_images, test_labels, verbose=1)
+print("Test accuracy:", test_acc)
+predictions=model.predict(test_images)
+print (class_names [np.argmax(predictions[199])])
+
+"""Creamos el modelo con las tres capas o niveles, el de entrada, la capa oculta y la de salida. 
+Entrenamos el modelo con 10 iteraciones. Y calculamos la pérdida y la precisión del modelo con las imagenes de test. 
+Pedimos que imprima la clase o categoría de prenda que tiene valor máximo en la predicción. 
+Y por último le pedimos que muestre esa misma imagen para ver si coincide."""
+
+plt.figure()
+plt.imshow(test_images[199])
+plt.colorbar()
+plt.show()
